@@ -1,11 +1,13 @@
 #include <Rcpp.h>
+#include "hit_and_run.h"
 using namespace Rcpp;
 
 // [[Rcpp::export]]
 List metropolis_hypergeometric_cpp(
     IntegerVector current, 
     IntegerMatrix moves, 
-    int iter, int thin
+    int iter, int thin,
+    bool hit_and_run
 ){
 
   int nTotalSamples = iter * thin;         // total number of steps
@@ -19,6 +21,7 @@ List metropolis_hypergeometric_cpp(
   bool anyIsNegative;
   IntegerVector move(n);
   double acceptProb = 0;
+  char answer;
 
   Function sample("sample");
   whichMove = sample(nMoves, nTotalSamples, 1);
@@ -33,11 +36,19 @@ List metropolis_hypergeometric_cpp(
       for(int k = 0; k < n; ++k){
         move[k] = moves(k, whichMove[thin*i+j]-1);
       }
-
-      // compute proposal
-      for(int k = 0; k < n; ++k){
-        proposal[k] = current[k] + move[k];
+      
+      //Hit and Run
+      if(hit_and_run) {
+        proposal = HitnRun(current, move);
       }
+      
+      else {
+        //compute proposal
+        for(int k = 0; k < n; ++k){
+          proposal[k] = current[k] + move[k];
+        }
+      }
+    
 
       // compute probability of transition
       anyIsNegative = false;

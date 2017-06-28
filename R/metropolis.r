@@ -144,7 +144,8 @@
 #' 
 #' 
 metropolis <- function(init, moves, iter = 1E3, burn = 0, thin = 1,
-  dist = c("hypergeometric","uniform"), engine = c("Cpp","R")
+  dist = c("hypergeometric","uniform"), engine = c("Cpp","R"), hit_and_run = FALSE
+  
 ){
 
   ## preliminary checking
@@ -203,7 +204,61 @@ metropolis <- function(init, moves, iter = 1E3, burn = 0, thin = 1,
   	
   	for(j in 1:thin){
 
-      move      <- sample(c(-1,1), 1) * moves[,sample(nMoves,1)]
+      move      <-  moves[,sample(nMoves,1)]
+      
+      if(hit_and_run) {
+        ##DO's code start here (hit and run)
+        new_move <- move[move != 0]
+        new_current <- current[move != 0]
+        
+        
+        possibleC <- (-1*new_current)/new_move
+        
+        
+        #Find th minimum and the maximum value of 0C
+        if(any(possibleC > 0)) {
+          pos <- possibleC[possibleC > 0]
+          Cmax <- min(pos)
+        } else {
+          Cmax <- -1
+        }
+        
+        if(any(possibleC < 0)) {
+          neg <- possibleC[possibleC < 0]
+          Cmin <- max(neg)
+        } else {
+          Cmin <- 1
+        }
+        
+        #Test to see if the boundary works...
+        propState <- current + Cmin*move
+        if(any(propState < 0)) {
+          Cmin <- 1
+        }
+        
+        propState <- current + Cmax*move
+        if(any(propState < 0)) {
+          Cmax <- -1
+        }
+        
+        #Finding the range for C(use of zero)
+        if(Cmin == 1) {
+          Crange <- c(1:Cmax)
+        } else if(Cmax == -1) {
+          Crange <- c(Cmin:-1)
+        } else if(Cmin == 1 && Cmsx ==-1) {
+          Crange <-c(-1,1)
+        } else {
+          Crange <- c(Cmin:-1,1:Cmax)
+        }
+        
+        #Finding the proposed table
+        moveC <- sample(Crange,1)
+        propState <- current + moveC*move
+        print(propState)  
+        #END
+      }
+      
       propState <- current + move
     
       if(any(propState < 0)){
@@ -250,8 +305,8 @@ metropolis <- function(init, moves, iter = 1E3, burn = 0, thin = 1,
     metropolis_uniform_cpp
   }
   message("Running chain (C++)... ", appendLF = FALSE)  
-  if (burn > 0) current <- sampler(current, allMoves, burn, 1)$steps[,burn]
-  out       <- sampler(current, allMoves, iter, thin)
+  if (burn > 0) current <- sampler(current, allMoves, burn, 1,hit_and_run)$steps[,burn]
+  out       <- sampler(current, allMoves, iter, thin,hit_and_run)
   out$moves <- moves
   message("done.")
 
@@ -273,7 +328,7 @@ metropolis <- function(init, moves, iter = 1E3, burn = 0, thin = 1,
 
 #' @rdname metropolis
 #' @export
-rawMetropolis <- function(init, moves, iter = 1E3, dist = "hypergeometric"){
-  metropolis(init, moves, iter, burn = 0, thin = 1, dist = dist) 
+rawMetropolis <- function(init, moves, iter = 1E3, dist = "hypergeometric", hit_and_run = FALSE){
+  metropolis(init, moves, iter, burn = 0, thin = 1, dist = dist, hit_and_run) 
 }
 

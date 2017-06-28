@@ -21,16 +21,28 @@ computeX2sCpp <- function(x, exp) {
     .Call('algstat_computeX2sCpp', PACKAGE = 'algstat', x, exp)
 }
 
-metropolis_hypergeometric_cpp <- function(current, moves, iter, thin) {
-    .Call('algstat_metropolis_hypergeometric_cpp', PACKAGE = 'algstat', current, moves, iter, thin)
+constr <- function(A, suffstat) {
+    .Call('algstat_constr', PACKAGE = 'algstat', A, suffstat)
 }
 
-metropolis_uniform_cpp <- function(current, moves, iter, thin) {
-    .Call('algstat_metropolis_uniform_cpp', PACKAGE = 'algstat', current, moves, iter, thin)
+HitnRun <- function(current, move) {
+    .Call('algstat_HitnRun', PACKAGE = 'algstat', current, move)
+}
+
+metropolis_hypergeometric_cpp <- function(current, moves, iter, thin, hit_and_run) {
+    .Call('algstat_metropolis_hypergeometric_cpp', PACKAGE = 'algstat', current, moves, iter, thin, hit_and_run)
+}
+
+metropolis_uniform_cpp <- function(current, moves, iter, thin, hit_and_run) {
+    .Call('algstat_metropolis_uniform_cpp', PACKAGE = 'algstat', current, moves, iter, thin, hit_and_run)
 }
 
 rfiberOne <- function(A, b) {
     .Call('algstat_rfiberOne', PACKAGE = 'algstat', A, b)
+}
+
+timesTwo <- function(constr, objfun, minimize, solver) {
+    .Call('algstat_timesTwo', PACKAGE = 'algstat', constr, objfun, minimize, solver)
 }
 
 walk <- function(current, moves, iter, thin) {

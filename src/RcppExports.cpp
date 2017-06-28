@@ -65,9 +65,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// constr
+IntegerMatrix constr(IntegerMatrix A, IntegerMatrix suffstat);
+RcppExport SEXP algstat_constr(SEXP ASEXP, SEXP suffstatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type suffstat(suffstatSEXP);
+    rcpp_result_gen = Rcpp::wrap(constr(A, suffstat));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HitnRun
+IntegerVector HitnRun(IntegerVector current, IntegerVector move);
+RcppExport SEXP algstat_HitnRun(SEXP currentSEXP, SEXP moveSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type move(moveSEXP);
+    rcpp_result_gen = Rcpp::wrap(HitnRun(current, move));
+    return rcpp_result_gen;
+END_RCPP
+}
 // metropolis_hypergeometric_cpp
-List metropolis_hypergeometric_cpp(IntegerVector current, IntegerMatrix moves, int iter, int thin);
-RcppExport SEXP algstat_metropolis_hypergeometric_cpp(SEXP currentSEXP, SEXP movesSEXP, SEXP iterSEXP, SEXP thinSEXP) {
+List metropolis_hypergeometric_cpp(IntegerVector current, IntegerMatrix moves, int iter, int thin, bool hit_and_run);
+RcppExport SEXP algstat_metropolis_hypergeometric_cpp(SEXP currentSEXP, SEXP movesSEXP, SEXP iterSEXP, SEXP thinSEXP, SEXP hit_and_runSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -75,13 +99,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerMatrix >::type moves(movesSEXP);
     Rcpp::traits::input_parameter< int >::type iter(iterSEXP);
     Rcpp::traits::input_parameter< int >::type thin(thinSEXP);
-    rcpp_result_gen = Rcpp::wrap(metropolis_hypergeometric_cpp(current, moves, iter, thin));
+    Rcpp::traits::input_parameter< bool >::type hit_and_run(hit_and_runSEXP);
+    rcpp_result_gen = Rcpp::wrap(metropolis_hypergeometric_cpp(current, moves, iter, thin, hit_and_run));
     return rcpp_result_gen;
 END_RCPP
 }
 // metropolis_uniform_cpp
-List metropolis_uniform_cpp(IntegerVector current, IntegerMatrix moves, int iter, int thin);
-RcppExport SEXP algstat_metropolis_uniform_cpp(SEXP currentSEXP, SEXP movesSEXP, SEXP iterSEXP, SEXP thinSEXP) {
+List metropolis_uniform_cpp(IntegerVector current, IntegerMatrix moves, int iter, int thin, bool hit_and_run);
+RcppExport SEXP algstat_metropolis_uniform_cpp(SEXP currentSEXP, SEXP movesSEXP, SEXP iterSEXP, SEXP thinSEXP, SEXP hit_and_runSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -89,7 +114,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerMatrix >::type moves(movesSEXP);
     Rcpp::traits::input_parameter< int >::type iter(iterSEXP);
     Rcpp::traits::input_parameter< int >::type thin(thinSEXP);
-    rcpp_result_gen = Rcpp::wrap(metropolis_uniform_cpp(current, moves, iter, thin));
+    Rcpp::traits::input_parameter< bool >::type hit_and_run(hit_and_runSEXP);
+    rcpp_result_gen = Rcpp::wrap(metropolis_uniform_cpp(current, moves, iter, thin, hit_and_run));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -102,6 +128,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerMatrix >::type A(ASEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type b(bSEXP);
     rcpp_result_gen = Rcpp::wrap(rfiberOne(A, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// timesTwo
+IntegerVector timesTwo(NumericVector constr, NumericVector objfun, LogicalVector minimize, CharacterVector solver);
+RcppExport SEXP algstat_timesTwo(SEXP constrSEXP, SEXP objfunSEXP, SEXP minimizeSEXP, SEXP solverSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type constr(constrSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type objfun(objfunSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type minimize(minimizeSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type solver(solverSEXP);
+    rcpp_result_gen = Rcpp::wrap(timesTwo(constr, objfun, minimize, solver));
     return rcpp_result_gen;
 END_RCPP
 }

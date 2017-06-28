@@ -17,7 +17,7 @@ Depends:
     mpoly,
     latter,
     m2r
-LinkingTo: Rcpp
+LinkingTo: Rcpp, rcdd
 Imports:
     stringr,
     reshape2,
@@ -25,7 +25,8 @@ Imports:
     lpSolve,
     parallel,
     memoise,
-    ggplot2
+    ggplot2, 
+    rcdd
 Suggests:
     vcd,
     microbenchmark
